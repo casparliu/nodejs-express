@@ -30,11 +30,11 @@ exports.read = function(req, res){
 
 exports.update = function(req, res){
   console.log(">>>>>>>>> update");
-  var personal = getPerson(req.params.name);
-  personal.name = req.query.name;
-  personal.tel = req.query.tel;
-  personal.company = req.query.company;
-  res.send(personal);
+  var person = getPerson(req.params.name);
+  person.name = req.query.name;
+  person.tel = req.query.tel;
+  person.company = req.query.company;
+  res.send(person);
 };
 
 exports.delete = function(req, res){
@@ -43,10 +43,11 @@ exports.delete = function(req, res){
 };
 
 function getPerson(id){
-	for(var i = 0; i < persons.length; i ++){
-  		if(persons[i].id == id){
-  			return persons[i];
-  			break;
-  		}
-    }
+	var person;
+	persons.forEach(function (entry){
+		if(entry.id === id){
+			person = entry;
+		}
+	});
+	return person;
 }
