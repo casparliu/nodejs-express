@@ -24,7 +24,8 @@ exports.create = function(req, res){
 
 exports.read = function(req, res){
   console.log(">>>>>>>>> read"+req.params.name);
-  res.send(getPerson(req.params.name));
+  //res.send(getPerson(req.params.name));
+  res.send(persons);
   res.end();
 };
 
@@ -39,7 +40,15 @@ exports.update = function(req, res){
 
 exports.delete = function(req, res){
   console.log(">>>>>>>>> delete");
-    res.end();
+  var id = req.params.name;
+  var newpersons = [];
+  persons.forEach(function (entry){
+    if(entry.id !== id){
+      newpersons.push(entry);
+    }
+  });
+  persons = newpersons;
+  res.end();
 };
 
 function getPerson(id){
@@ -50,4 +59,26 @@ function getPerson(id){
 		}
 	});
 	return person;
+}
+
+exports.upload = function(req, res){
+  var fs = require('fs');
+  var path = require('path');
+  // var ext = path.extname(req.files.file.path);
+  var filename = req.params.name + '.jpg';
+  var type = req.params.type;   // 'photo' or 'voice'
+
+
+  fs.readFile(req.files.file.path, function (err, data) {
+      var newPath = path.join(__dirname, '../frontend/', 'uploads',  filename);
+
+
+      fs.writeFile(newPath, data, function (err) {
+          if (err) {
+              res.json({status: 'error', message: err});
+          } else {
+              res.json({status: 'ok'});
+          }
+      });
+  });
 }

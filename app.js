@@ -22,8 +22,9 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
+app.use(express.multipart());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 // development only
 if ('development' == app.get('env')) {
@@ -31,9 +32,12 @@ if ('development' == app.get('env')) {
 }
 
 app.post('/user/:name', api.create);
-app.get('/user/:name', api.read);
+app.get('/user', api.read);
 app.put('/user/:name', api.update);
 app.delete('/user/:name', api.delete);
+
+//upload files
+app.post('/user/:name/:type', api.upload);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
